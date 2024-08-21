@@ -36,8 +36,13 @@ type
 		pu:lista;
 	end;
 
+	puntajes=record
+		punt:real;
+		cod:integer;
+	end;
+
 	vectorInfo=array [generos] of punteros;
-	vectorOrdenado=array [generos] of integer;
+	vectorOrdenado=array [generos] of puntajes;
 
 procedure cargarInfo(var v:vectorInfo);
 	procedure inicializarVector(var v:vectorInfo);
@@ -66,9 +71,9 @@ procedure cargarInfo(var v:vectorInfo);
 		nue:lista;
 	begin
 		new(nue); nue^.elem:=p; nue^.sig:=nil;
-		v.pu:=nue;
 		if(v.pi=nil)then v.pi:=nue
 		else v.pu^.sig:=nue;
+		v.pu:=nue;
 	end;
 var
 	p:info;
@@ -82,35 +87,35 @@ begin
 end;
 
 procedure generarVector(var v:vectorOrdenado; inf:vectorInfo);
-	function codigoMax(l:lista):integer;
-	var
-		maxpuntaje:real;
-		auxcod:integer;
+	procedure codigoMax(l:lista; var cod:integer; var punt:real);
 	begin
-		maxpuntaje:=-1;
+		punt:=-1;
 		while(l<>nil)do begin
-			if(l^.elem.puntaje>maxpuntaje)then begin
-				maxpuntaje:=l^.elem.puntaje;
-				auxcod:=l^.elem.codpelicula;
+			if(l^.elem.puntaje>punt)then begin
+				punt:=l^.elem.puntaje;
+				cod:=l^.elem.codpelicula;
 			end;
 			l:=l^.sig;
 		end;
-		codigoMax:=auxcod;
 	end;
 var
 	i:generos;
+	codmax:integer; puntajemax:real;
 begin
-	for i:=1 to dimF do
-		v[i]:=codigoMax(inf[i].pi);
+	for i:=1 to dimF do begin
+		codigoMax(inf[i].pi, codmax, puntajemax);
+		v[i].cod:=codmax;
+		v[i].punt:=puntajemax;
+	end;
 end;
 
 procedure ordenarVector(var v: vectorOrdenado);
 var
-	i,j:integer; act:integer;
+	i,j:integer; act:puntajes;
 begin
 	for i:= 2 to dimF do begin
 		act:=v[i]; j:=i-1;
-		while (j>0) and (v[j]>act) do begin
+		while (j>0) and (v[j].punt>act.punt) do begin
 			v[j+1]:=v[j];
 			j:=j-1;
 		end;
@@ -120,8 +125,8 @@ end;
 
 procedure maxmin (v:vectorOrdenado);
 begin
-	writeln('pelicula con mayor puntaje ' , v[dimF]);
-	writeln('pelicula con menor puntaje ' , v[1]);
+	writeln('pelicula con mayor puntaje ' , v[dimF].cod);
+	writeln('pelicula con menor puntaje ' , v[1].cod);
 end;
 
 var {programa principal}

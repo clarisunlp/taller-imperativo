@@ -87,7 +87,7 @@ begin
 	end;
 end;
 
-procedure EliminarVentas(var v: infoventas; var dimL: integer);
+procedure EliminarVentas(var v: infoventas; var dimL: integer; paramInf: rangoProductos; paramSup: rangoProductos);
 	procedure BuscarPosiciones(inf:rangoProductos; sup:rangoProductos; v:infoventas; dimL:integer; var posInicial:rangoProductos; var posFinal:rangoProductos; var existe:boolean);
 	var
 		i:integer;
@@ -101,12 +101,9 @@ procedure EliminarVentas(var v: infoventas; var dimL: integer);
 		end;
 	end;
 var
-	paramInf, paramSup: rangoProductos;
 	posInicial, posFinal: rangoProductos;
 	existe: boolean; i:integer; p:rangoProductos;
 begin
-	writeln('ingrese el parametro inferior'); readln(paramInf);
-	writeln('ingrese el parametro superior'); readln(paramSup);
 	BuscarPosiciones(paramInf, paramSup, v, dimL, posInicial, posFinal, existe);
 	if existe then begin
 		p:=posInicial;
@@ -160,12 +157,15 @@ end;
 var
 	v:infoventas; vg:VectorIncG;
 	dimL: integer; dimLvg:integer;
+	paramInf, paramSup: rangoProductos;
 begin
 	RetornarVentas(v, dimL);
 	MostrarInfo(v, dimL);
 	OrdenarVector(v, dimL);
 	MostrarInfo(v, dimL);
-	EliminarVentas(v, dimL);
+	writeln('ingrese el parametro inferior'); readln(paramInf);
+	writeln('ingrese el parametro superior'); readln(paramSup);
+	EliminarVentas(v, dimL, paramInf, paramSup);
 	MostrarInfo(v, dimL);
 	dimLvg:= 0;
 	InfoCodigoPar(vg, v, dimL, dimLvg);
