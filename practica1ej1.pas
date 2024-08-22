@@ -168,6 +168,6 @@ begin
 	EliminarVentas(v, dimL, paramInf, paramSup);
 	MostrarInfo(v, dimL);
 	dimLvg:= 0;
-	InfoCodigoPar(vg, v, dimL, dimLvg);
+	InfoCodigoPar(vg, v, dimL, dimLvg); {PREGUNTAR QUE QUIERE EL ENUNCIADO}
 	Imprimir(vg, dimLvg);
 end.
