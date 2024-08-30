@@ -19,7 +19,7 @@ d. Implemente un módulo que reciba el árbol generado en iii. y retorne el cód
 con mayor cantidad de ventas.}
 program practia3ej2;
 const
-	cortecod=1;
+	cortecod=0;
 type
 	ventas=record
 		codigo:integer;
@@ -74,10 +74,8 @@ procedure IncisoA(var ai:arbol; var aii:arbol_ii; var aiii:arbol_iii);
 		procedure CargarRegistro(var d:ventas);
 		var
 			vFechas:array [0..5] of string= ('01/01', '02/01', '03/01', '04/01', '05/01', '06/01');
-			cod:integer;
 		begin
-			cod:=random(10);
-				d.codigo:=cod;
+				d.codigo:=random(10);
 				d.fecha:=vFechas[random(6)];
 				d.cantidad:=random(99);
 		end;
@@ -90,7 +88,7 @@ procedure IncisoA(var ai:arbol; var aii:arbol_ii; var aiii:arbol_iii);
 				ai^.HI:=nil;
 				ai^.HD:=nil;
 			end else
-				if (ai^.elem.codigo<d.codigo) then CargarArboli(ai^.HI, d)
+				if (ai^.elem.codigo>d.codigo) then CargarArboli(ai^.HI, d)
 				else CargarArboli(ai^.HD, d);
 		end;
 
@@ -105,7 +103,7 @@ procedure IncisoA(var ai:arbol; var aii:arbol_ii; var aiii:arbol_iii);
 				if(aii^.elem.codigo=d.codigo)then
 					aii^.elem.cantidad:=aii^.elem.cantidad+d.cantidad
 				else
-					if (aii^.elem.codigo<d.codigo) then CargarArbolii(aii^.HI, d)
+					if (aii^.elem.codigo>d.codigo) then CargarArbolii(aii^.HI, d)
 					else CargarArbolii(aii^.HD, d);
 		end;
 
@@ -131,11 +129,12 @@ procedure IncisoA(var ai:arbol; var aii:arbol_ii; var aiii:arbol_iii);
 				aiii^.elem.codigo:=d.codigo;
 				aiii^.HI:=nil;
 				aiii^.HD:=nil;
+				agregarAdelante(aiii^.elem.listaV, d.fecha, d.cantidad);
 			end else
 				if(aiii^.elem.codigo=d.codigo)then
 					agregarAdelante(aiii^.elem.listaV, d.fecha, d.cantidad)
 				else
-					if (aiii^.elem.codigo<d.codigo) then CargarArboliii(aiii^.HI, d)
+					if (aiii^.elem.codigo>d.codigo) then CargarArboliii(aiii^.HI, d)
 					else CargarArboliii(aiii^.HD, d);
 		end;
 
@@ -151,16 +150,39 @@ procedure IncisoA(var ai:arbol; var aii:arbol_ii; var aiii:arbol_iii);
 			datoii.codigo:=datoi.codigo; datoii.cantidad:=datoi.cantidad;
 			CargarArbolii(aii,datoii);
 			CargarArboliii(aiii,datoi);
-			writeln(datoi.codigo);
 			CargarRegistro(datoi);
+			writeln(datoi.codigo);
 		end;
 	end;
+{procedure ImprimirArbol(a:arbol_iii);
+begin
+	if(a<>nil)then begin
+		ImprimirArbol(a^.HI);
+		writeln('codigo ' , a^.elem.codigo);
+		while(a^.elem.listaV <> nil)do begin
+			writeln('fecha ' , a^.elem.listaV^.elem.fecha);
+			writeln('unidades ' , a^.elem.listaV^.elem.cantidad);
+			a^.elem.listaV:=a^.elem.listaV^.sig;
+		end;
+		ImprimirArbol(a^.HD);
+	end;
+end;}
+
+procedure IncisoB(a:arbol; fecha:string);
+{b. Implemente un módulo que reciba el árbol generado en i. y una fecha y retorne la cantidad
+total de productos vendidos en la fecha recibida.}
+var
+begin
+	
 
 var
-	ai:arbol;
+	ai:arbol; fecha:string;
 	aii:arbol_ii;
 	aiii:arbol_iii;
 begin
 	randomize;
 	IncisoA(ai,aii,aiii);
+	//ImprimirArbol(aiii);
+	writeln('ingrese una fecha'); readln(fecha);
+	IncisoB(ai, fecha);
 end.
