@@ -168,12 +168,18 @@ begin
 	end;
 end;}
 
-procedure IncisoB(a:arbol; fecha:string);
+function IncisoB(a:arbol; fecha:string):integer;
 {b. Implemente un módulo que reciba el árbol generado en i. y una fecha y retorne la cantidad
 total de productos vendidos en la fecha recibida.}
-var
 begin
-	
+	if(a<>nil)then
+		if (a^.elem.fecha = fecha) then
+			IncisoB:= IncisoB(a^.HI, fecha) + a^.elem.cantidad + IncisoB(a^.HD, fecha)
+		else 
+			IncisoB:=IncisoB(a^.HI, fecha) + IncisoB(a^.HD, fecha)
+	else
+		IncisoB:=0;
+end;
 
 var
 	ai:arbol; fecha:string;
@@ -184,5 +190,5 @@ begin
 	IncisoA(ai,aii,aiii);
 	//ImprimirArbol(aiii);
 	writeln('ingrese una fecha'); readln(fecha);
-	IncisoB(ai, fecha);
+	writeln('la cantidad de ventas en la fecha ' , fecha , 'es de ' , IncisoB(ai, fecha));
 end.
