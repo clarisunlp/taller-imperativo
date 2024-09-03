@@ -77,6 +77,17 @@ type
 		HI:arbolii;
 		HD:arbolii;
 	end;
+	
+	infoF=record
+		ISBN:integer;
+		cantidad:integer;
+	end;
+	
+	listaF=^nodoF;
+	nodoF=record
+		elem:infoF;
+		sig:listaF
+	end;
 
 procedure cargarArboles(var ai:arboli; var aii:arbolii);
 {a. Un módulo que lea préstamos y retorne 2 estructuras de datos con la información de
@@ -227,10 +238,48 @@ begin
 	else incisoE:=0;
 end;
 
-procedure incisoF(ai:arboli
+procedure incisoF(ai:arboli; var lF:listaF);
+{f. Un módulo que reciba la estructura generada en i. y retorne una nueva estructura
+ordenada ISBN, donde cada ISBN aparezca una vez junto a la cantidad total de veces
+que se prestó.}
+
+	procedure agregarAdelante(d:infoi; var l:listaF);
+	var
+		nue:listaF;
+	begin
+		if (l<>nil) then
+			if (l^.elem.ISBN=d.ISBN) then l^.elem.cantidad:=l^.elem.cantidad+1
+			else begin			
+				new(nue); nue^.sig:=nil;
+				nue^.elem.ISBN:= d.ISBN; nue^.elem.cantidad:=1; nue^.sig:=l; l:=nue;
+			end 
+		else begin 
+			new(nue); nue^.sig:=nil;
+			nue^.elem.ISBN:= d.ISBN; nue^.elem.cantidad:=1;
+			l:=nue
+		end;
+	end;
+
+begin
+	if(ai<>nil)then begin
+		incisoF(ai^.HD, lf);
+		agregarAdelante(ai^.elem, lf);
+		incisoF(ai^.HI, lf);
+	end;
+end;
+
+
+procedure imprimirLista(l:listaF);
+begin
+		if (l<>nil) then begin
+			writeln('ISBN ' , l^.elem.ISBN);
+			writeln('CANTIDAD DE PRESTAMOS ' , l^.elem.cantidad);
+			imprimirLista(l^.sig);
+		end;
+end;
 
 var
-	ai:arboli; aii:arbolii;
+	ai:arboli; aii:arbolii; lF:listaF;
 	numSocio:integer;
 begin
 	randomize;
@@ -245,5 +294,7 @@ begin
 	writeln('la cantidad de prestamos realizados al socio ' , numSocio , ' es ' , incisoD(ai, numSocio));
 	writeln('ingrese un numero de socio'); readln(numSocio);
 	writeln('la cantidad de prestamos realizados al socio ' , numSocio , ' es ' , incisoE(aii, numSocio));
-	incisoF(ai, aF);
+	lF:=nil;
+	incisoF(ai, lF);
+	imprimirLista(lF);
 end.
