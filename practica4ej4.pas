@@ -243,27 +243,23 @@ procedure incisoF(ai:arboli; var lF:listaF);
 ordenada ISBN, donde cada ISBN aparezca una vez junto a la cantidad total de veces
 que se prestó.}
 
-	procedure agregarAdelante(d:infoi; var l:listaF);
+	procedure procesarNodo(d:infoi; var l:listaF);
+	
+		agregarAdelante
+		
 	var
 		nue:listaF;
 	begin
 		if (l<>nil) then
 			if (l^.elem.ISBN=d.ISBN) then l^.elem.cantidad:=l^.elem.cantidad+1
-			else begin			
-				new(nue); nue^.sig:=nil;
-				nue^.elem.ISBN:= d.ISBN; nue^.elem.cantidad:=1; nue^.sig:=l; l:=nue;
-			end 
-		else begin 
-			new(nue); nue^.sig:=nil;
-			nue^.elem.ISBN:= d.ISBN; nue^.elem.cantidad:=1;
-			l:=nue
-		end;
+			else agregarAdelante(l, d);	
+		else agregarAdelante(l, d);	
 	end;
 
 begin
 	if(ai<>nil)then begin
 		incisoF(ai^.HD, lf);
-		agregarAdelante(ai^.elem, lf);
+		procesarNodo(ai^.elem, lf);
 		incisoF(ai^.HI, lf);
 	end;
 end;
