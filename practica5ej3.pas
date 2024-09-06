@@ -33,6 +33,7 @@ type
 
 	rubros= array [1..dimF] of arbol;
 	maxCod=array [1..dimF] of info;
+	productos=array[1..dimF] of integer;
 
 procedure inicializarVector(var v:rubros);
 var
@@ -109,8 +110,79 @@ begin
 	end else incisoB:=0;
 end;
 
+procedure incisoC(v: rubros; var vM:maxCod);
+{Implementar un módulo que reciba la estructura generada en a), y retorne, para cada
+rubro, el código y stock del producto con mayor código.}
+
+	procedure inicializarVectorM(vM:maxCod);
+	var
+		i:integer;
+	begin
+		for i:=1to dimF do begin 
+			vM[i].codigo:=0; vM[i].stock:=0;
+		end;
+	end;
+
+	procedure buscarMaximo(a:arbol; var cod:integer; var stock:integer);
+	begin
+		if (a^.HD<>nil) then buscarMaximo(a^.HD, cod, stock);
+		cod:=a^.elem.codigo; stock:=a^.elem.stock;
+	end;
+	
+	procedure cargarDatos(var d:info; cod:integer; stock:integer);
+	begin
+		d.codigo:=cod;
+		d.stock:=stock;
+	end;
+
 var
-	v:rubros; vM:maxCod;
+	i, codM, stockM:integer; 
+begin
+	inicializarVectorM(vM);
+	for i:=1 to dimF do begin
+		if (v[i]<>nil) then begin
+			buscarMaximo(v[i], codM, stockM);
+			cargarDatos(vM[i], codM, stockM);
+		end;
+	end;
+end;
+	
+procedure imprimirVectorM(vM:maxCod);
+var
+	i:integer;
+begin
+	for i:=1 to dimF do begin
+		if(vM[i].codigo<>0)then begin
+			writeln('RUBRO: ' , i);
+			writeln('MAYOR CODIGO ' , vM[i].codigo);
+			writeln('STOCK ' , vM[i].stock);
+		end;
+	end;
+end;
+		
+procedure incisoD(v:rubros; var vP:productos);
+
+	function contarStock(a:arbol):integer;
+	begin
+		if(a<>nil)then contarStock:=contarStock(a^.HD)+contarStock(a^.HI)+a^.elem.stock
+		else contarStock:=0;
+	end;
+
+var
+	i:integer;
+begin	
+		for i:=1 to dimF do vP[i]:= contarStock(v[i]);
+end;
+
+procedure imprimirVectorP(vP:productos);
+var
+	i:integer;
+begin
+	for i:=1 to dimF do writeln('STOCK DEL RUBRO ' , i , ': ' , vP[i]);
+end;
+			
+var
+	v:rubros; vM:maxCod; vP:productos;
 	unCodigo:integer;
 	unRubro:rangoRubros;
 begin
@@ -121,5 +193,6 @@ begin
 	writeln('ingrese un rubro '); readln(unRubro);
 	writeln('ingrese un codigo '); readln(unCodigo);
 	writeln('la cantidad de codigos ' , unCodigo , ' que hay en el rubro ' , unRubro , ' es ' , incisoB(v[unRubro], unCodigo));
-	incisoC(v, vM);
+	incisoC(v, vM); //imprimirVectorM(vM);
+	incisoD(v, vP); //imprimirVectorP(vP);
 end.
